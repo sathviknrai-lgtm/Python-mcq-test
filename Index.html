@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Python MCQ Test</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    padding: 20px;
+}
+.container {
+    max-width: 800px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+}
+h1 {
+    text-align: center;
+}
+.timer {
+    font-weight: bold;
+    color: red;
+    text-align: right;
+}
+.question {
+    margin-bottom: 15px;
+}
+.options label {
+    display: block;
+    margin: 5px 0;
+}
+.correct {
+    color: green;
+}
+.wrong {
+    color: red;
+}
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-top: 20px;
+}
+.result {
+    margin-top: 20px;
+    padding: 15px;
+    background: #eef;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>Python MCQ Test</h1>
+
+<label><b>Enter Your Name:</b></label>
+<input type="text" id="username" required>
+<div class="timer" id="timer">Time Left: 05:00</div>
+
+<form id="quizForm"></form>
+
+<button onclick="submitQuiz()">Submit</button>
+
+<div class="result" id="result"></div>
+</div>
+
+<script>
+const questions = [
+{
+q: "Which of the following is the correct extension of a Python file?",
+options: [".python", ".pl", ".py", ".p"],
+answer: 2
+},
+{
+q: "Which keyword is used to define a function in Python?",
+options: ["fun", "define", "def", "function"],
+answer: 2
+},
+{
+q: "What will be the output of 4 + 3 % 5?",
+options: ["7", "2", "4", "1"],
+answer: 0
+},
+{
+q: "Which operator is used for power in Python?",
+options: ["^", "**", "^^", "*"],
+answer: 1
+},
+{
+q: "What is a variable defined outside a function called?",
+options: ["Static variable", "Global variable", "Local variable", "Automatic variable"],
+answer: 1
+},
+{
+q: "What will be the output of check(3) if it returns 'Even' for even numbers?",
+options: ["Even", "Odd", "Error", "None"],
+answer: 1
+},
+{
+q: "Which keyword is used to exit a loop?",
+options: ["exit", "stop", "break", "return"],
+answer: 2
+},
+{
+q: "What does the continue statement do?",
+options: [
+"Stops the loop",
+"Skips current iteration",
+"Exits program",
+"Pauses loop"
+],
+answer: 1
+},
+{
+q: "Which loop is used when number of iterations is known?",
+options: ["for", "while", "do-while", "infinite"],
+answer: 0
+},
+{
+q: "What is the output of add(5) if b = 10 by default?",
+options: ["5", "10", "15", "Error"],
+answer: 2
+}
+];
+
+// Shuffle questions
+questions.sort(() => Math.random() - 0.5);
+
+const quizForm = document.getElementById("quizForm");
+
+questions.forEach((item, index) => {
+    let div = document.createElement("div");
+    div.className = "question";
+    div.innerHTML = `<p><b>Q${index+1}. ${item.q}</b></p>`;
+    let optionsDiv = document.createElement("div");
+    optionsDiv.className = "options";
+
+    item.options.forEach((opt, i) => {
+        optionsDiv.innerHTML += `
+        <label>
+        <input type="radio" name="q${index}" value="${i}">
+        ${opt}
+        </label>`;
+    });
+
+    div.appendChild(optionsDiv);
+    quizForm.appendChild(div);
+});
+
+let time = 300;
+const timerDiv = document.getElementById("timer");
+const timer = setInterval(() => {
+    let min = Math.floor(time / 60);
+    let sec = time % 60;
+    timerDiv.textContent = `Time Left: ${min}:${sec < 10 ? "0" : ""}${sec}`;
+    time--;
+    if (time < 0) {
+        clearInterval(timer);
+        submitQuiz();
+    }
+}, 1000);
+
+function submitQuiz() {
+    clearInterval(timer);
+    let score = 0;
+    let correct = 0;
+    let wrong = 0;
+
+    questions.forEach((q, i) => {
+        let selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (selected) {
+            if (parseInt(selected.value) === q.answer) {
+                score++;
+                correct++;
+            } else {
+                wrong++;
+            }
+        } else {
+            wrong++;
+        }
+    });
+
+    let percentage = (score / questions.length) * 100;
+    document.getElementById("result").innerHTML = `
+    <h3>Result</h3>
+    <p><b>Name:</b> ${document.getElementById("username").value}</p>
+    <p><b>Score:</b> ${percentage}%</p>
+    <p class="correct">Correct Answers: ${correct}</p>
+    <p class="wrong">Wrong Answers: ${wrong}</p>
+    `;
+}
+</script>
+
+</body>
+</html>
